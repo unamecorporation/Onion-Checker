@@ -72,10 +72,16 @@ banner () { #Simplesmente exibe o banner da aplicação
 tore="";
 cnt="";
 a2e="";
+version="0.2.3";
 defvar () { #Define se o tor já está rodando
   torr=$(ps aux | grep -w tor | grep -v grep | grep -v onion-checker);
 }
 #Fim das variáveis globais
+
+version () {
+  echo "Build da versão $version"; exit 0
+}
+
 torcheck () { #Checa se o tor está presente no computador.
   tor --help 1> /dev/null 2> /dev/null
   if [ "$?" == "127" ]; then
@@ -83,7 +89,8 @@ torcheck () { #Checa se o tor está presente no computador.
   else
     tore="y"
   fi
-} #checa
+}
+
 stor () { #Exibe a existência ou não do Tor para o usuário
   if [ "$tore" == "n" ]; then
     echo -e "\nQue pena, o Tor não está instalado no seu computador. "
@@ -95,6 +102,7 @@ stor () { #Exibe a existência ou não do Tor para o usuário
     echo -e "programa.\n"
   fi
 }
+
 linkorg () { #Organiza um arquivo contendo links passados pelo usuário
 last="${@: -1}"
 if [[ "$#" == "0" ]]; then
@@ -125,9 +133,11 @@ sed -r 's/^(.*)(................\.onion).*$/\2/' |\
 sort -u > $last
 fi
 }
+
 starttor () { #Inicia o tor em segundo plano
   tor 1> /tmp/tor 2> /dev/null &
 }
+
 checktorrunning () { #Checa se o tor está rodando
   ((++counter));
   if [ "$torr" != "" ]; then
@@ -143,6 +153,7 @@ checktorrunning () { #Checa se o tor está rodando
   fi
 
 }
+
 checklink () { #Checa se os links estão online
 url=$1
 destino=$2
@@ -226,7 +237,87 @@ elif [[ "$#" -ge "2" ]] && [[ "$last" != "-st" ]];then
   echo -e "\nE criando como resultado ${@: -1}" #Mostra o último
   cat $array >> $last
 fi
+  }
 
+  install () { #Instala o programa no computador
+    installed=$(which onion-checker); #Existencia do arquivo no PATH
+    if [[ "$installed" == "" ]];then
+      echo "Nenhuma instalação encontrada, instalando..."
+      sudo cp onion-checker /usr/bin/ && sudo cp onion-checker.bc /etc/bash_completion.d/ ; err=$(echo "$?");
+      if [[ "$err" == "0" ]]; then #Checa se houve erro
+        echo "onion-checker instalado com sucesso!";
+      else
+        echo "Um erro ocorreu durante a instalação, com código de erro $err";
+        rm -rf /usr/bin/onion-checker 2> /dev/null
+      fi
+    elif [[ "$installed" == "/usr/bin/onion-checker" ]];then #Testa se ja existe
+        echo "O onion-checker ja está instalado no seu computador"; err=$(echo "$?");
+        vers=$(onion-checker -v | awk '{print $4}'); #Pega a versão do script instalado
+          if [[ "$version" > "$vers" ]];then #Comparação das versões
+            echo " A versão atual é mais recente que a instalada no computador,"
+            echo "Atualizando ..."
+            sudo cp -f onion-checker /usr/bin/onion-checker && sudo cp -f onion-checker.bc /etc/bash_completion.d/;
+        elif [[ "$version" == "$vers" ]];then
+          echo "A versão atual é a mesma que a instalada, saindo ..."
+          exit 0
+        elif [[ "$version" < "$vers" ]]; then
+          echo "A versão atual é mais antiga que a instalada, saindo ..."
+          exit 0
+        fi
+    fi
+  }
+
+  uninstall () { #Desinstalação do script do computador
+    resp=""
+    echo "Tem certeza que deseja desinstalar o programa? (y/N)";
+    read resp;
+    if [[ "$resp" == "" ]]; then
+      echo -e "\nDesinstalação cancelada, abortando ...\n"
+      exit 0
+    else
+      while [[ ! $resp =~ ^[y|n]$ ]] ; do #Espera por receber Y, N ou [Enter]
+       echo -e "Você deve digitar Y ou N e pressionar Enter.\n";
+       read resp;
+       resp=$(echo $resp | tr A-Z a-z 2> /dev/null);
+  done
+    if [[ "$resp" == "y" ]]; then # Processo de desinstalação
+      inst="";
+      inst=$(ls /usr/bin/onion-checker 2> /dev/null)
+      if [[ "$inst" == "" ]]; then
+        echo "O programa do qual você usou essa função, não está instalado."
+        exit 0
+      elif [[ "$inst" == "/usr/bin/onion-checker" ]]; then
+        sudo rm -rf /usr/bin/onion-checker /etc/bash_completion.d/onion-checker.bc
+        ecode=$?
+        if  [[ "$ecode" == 0 ]]; then
+          echo "Exclusão bem-sucedida."
+        else
+          echo "Houve um problema na desinstalação do programa, com código de erro $ecode";
+        fi
+      fi
+    else  #Aborta a desinstalação
+      echo -e "\nDesinstalação cancelada, abortando ...\n"
+      exit 0
+
+  fi
+fi
+  }
+
+  error () { #Ocorre caso a flag digitada não seja uma das especificadas
+    echo ''
+    echo "Opa, parece que você digitou uma flag inválida ... Dê uma olhada nas\
+ possibilidades:"
+    echo ''
+    echo '-h ou --help            Mostra essa mensagem de ajuda;'
+    echo '-l ou --link-org        Organiza os links de um arquivo;'
+    echo '-b ou --banner          Exibe o banner e sai;'
+    echo '-t ou --tor-check       Checa a existência do Tor no computador;'
+    echo '-c ou --check-link      Checa por links online e manda cria'
+    echo 'arquivo linkson.txt com os títulos e links online, caso'
+    echo 'nenhum nome destino seja dado.'
+    echo -e '-j ou --join-lists      Une arquivos contendo links ou outro\
+  conteúdo'
+    echo ''
   }
 
 help () { #Imprime ajuda, padrão exibido se nenhuma flag é passada pro comando
@@ -242,11 +333,14 @@ help () { #Imprime ajuda, padrão exibido se nenhuma flag é passada pro comando
   echo '-l ou --link-org        Organiza os links de um arquivo;'
   echo '-b ou --banner          Exibe o banner e sai;'
   echo '-t ou --tor-check       Checa a existência do Tor no computador;'
-  echo '-c ou --check-link      Checa por links online e manda cria'
+  echo '-c ou --check-link      Checa por links online e manda criar'
   echo 'arquivo linkson.txt com os títulos e links online, caso'
   echo 'nenhum nome destino seja dado.'
-  echo -e '-j ou --join-lists      Une arquivos contendo links ou outro\
-conteúdo'
+  echo -e '-j ou --join-lists      Une arquivos contendo links ou outro
+conteúdo;'
+  echo -e '--install          Transfere o programa para o diretório /usr/bin
+  permitindo sua execução de forma global;'
+  echo -e '--uninstall         Remove completamente o software do computador. '
   echo ''
 }
 
@@ -261,5 +355,9 @@ if [ "$*" == "-h" ] || [ "$*" == "--help" ] || [ "$*" == "" ];
     -t | --tor-check      ) torcheck; stor;                       ;;
     -c | --check-link     ) defvar; checktorrunning; checklink "$2" "$3"; shift          ;;
     -j | --join-lists     ) shift ; joinlists "$@" ; shift $# ;   ;;
+    -v | --version        ) version; shift;                       ;;
+     --install            ) install; shift;                       ;;
+     --uninstall          ) uninstall; shift;                     ;;
+    *                     ) error; exit 1;                        ;;
     esac
 fi

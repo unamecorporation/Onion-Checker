@@ -1,0 +1,22 @@
+_onion() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--help --link-org --banner --tor-check --check-link --join-lists --version --install"
+    opt="-h -l -b -t -c -j -v -i"    
+    if [[ ${cur} == --* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    elif [[ ${cur} == -* ]]; then
+	COMPREPLY=( $(compgen -W "${opt}" -- ${cur}) )
+    elif [[ ${cur} == /* ]] ; then
+	_filedir
+	return 0
+    else 
+	    COMPREPLY=( $(compgen -W "$(ls $(pwd))" -- $cur) )
+	return 0
+    fi
+}
+complete -F _onion onion-checker
