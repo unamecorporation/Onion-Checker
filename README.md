@@ -24,6 +24,8 @@ Y88b  d88P 888  888 Y8b.     Y88b.    888 "88b Y8b.     888      d8p
  "Y8888P"  888  888  "Y8888   "Y8888P 888  888  "Y8888  888      Y8P
  </pre>
 
+## Descrição da Ferramenta
+
 O Onion Checker é um testador de links da rede do Tor. Além de testar, ele cataloga os títulos dos sites que estiverem online, bem como agrupa outra lista com os links que estiverem offline, com base no conteúdo do arquivo de links passado para o testador.
 
 **Utilidade:** Faz-se útil quando o usuário navega na rede Onion e não quer testar cada site que encontra um por um, manualmente. O programa faz o teste desses links pra você, e os agrupa permitindo-o saber previamente do que se trata.
@@ -88,11 +90,28 @@ Iniciando a checagem dos links...
 
 Onde o caminho para o arquivo será sempre sua `$HOME`, caso omitido o arquivo de destino. Vale lembrar que ele cria um arquivo separado par aos arquivos offline.
 
+## Dependências
+
+- tor 
+- torsocks 
+- curl 
+- coreutils
+
 
 **Autor:** Jesus Santos
+
+**Linguagem utilizada:** Shell Script
+
+**Versão Atual:** 0.2.3
+
+**Ambiente de testes:** Kali Linux, Ubuntu, KurupiraOS
 
 **Colaboradores:** Equipe de desenvolvimento de ferramentas daUnameCorporation
 
 **Licensa**: GPLv3
 
+## Relatório de bugs:
+
 **GitHub:** https://github.com/unamecorporation/Onion-Checker
+
+**Bugs:** https://github.com/JesusFromHellz/Onion-Checker/issues
