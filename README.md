@@ -37,6 +37,9 @@ Esse programa funciona em qualquer computador que contenha o **Bash v4.0+**, sej
 Ele é parte da categoria de Anonimato existente no Kurupira, para mais informações, procure essa parte na documentação do sistema ou no nosso site.
 <p style="page-break-before: always">
 
+## Chamada da Ferramenta
+> uname@kurupira: onion-checker <parâmetros>
+
 ## Help
 
 Abaixo você pode conferir o menu help da ferramenta:
