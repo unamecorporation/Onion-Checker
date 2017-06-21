@@ -1,65 +1,109 @@
-# Onion-Checker
-### (Em Desenvolvimento)
+<style media="screen" type="text/css">
 
-##### Script para testar se hidden services no Tor estão em fucionamento, bem como catalogá-los de forma simples. (Funções adicionais sendo implementadas).
+p { text-align: justify
+}
 
-# Funcionalidades
-
-[+] **_Implementadas Totalmente:_**
-
-- [x] *Link Organization - Impressão em arquivo ou tela;*
-
-- [x] *Check Tor Installation;*
-
-- [x] *Check Link with timeout set by user;*
-
-- [x] *Unir arquivos de texto em um só - Impressão em arquivo ou tela;*
-
-- [x] *Instalar/Desinstalar o script*.
-
-[+] **_Implementadas Parcialmente:_**
+pre { color: green 
+}
 
 
 
-#### Especificações de uso contidas no --help do arquivo:
+</style>
+## Onion Checker
+
+<pre>
+Be welcome to the ...
+
+.d88888b.            d8b
+d88P" "Y88b          Y8P
+888     888
+888     888 88888b.  888  .d88b.  88888b.
+888     888 888 "88b 888 d88""88b 888 "88b
+888     888 888  888 888 888  888 888  888
+Y88b. .d88P 888  888 888 Y88..88P 888  888
+ "Y88888P"  888  888 888  "Y88P"  888  888
+
+
+                                                                 888
+ .d8888b.  888                        888                        888
+d88P  Y88b 888                        888                        888
+888    888 888                        888                        888
+888        88888b.   .d88b.   .d8888b 888  888  .d88b.  888d888  888
+888        888  88b d8P  Y8b d88P"    888 .88P d8P  Y8b 888P     888
+888    888 888  888 88888888 888      888888K  88888888 888 
+Y88b  d88P 888  888 Y8b.     Y88b.    888 "88b Y8b.     888      d8p
+ "Y8888P"  888  888  "Y8888   "Y8888P 888  888  "Y8888  888      Y8P
+ </pre>
+
+O Onion Checker é um testador de links da rede do Tor. Além de testar, ele cataloga os títulos dos sites que estiverem online, bem como agrupa outra lista com os links que estiverem offline, com base no conteúdo do arquivo de links passado para o testador.
+
+**Utilidade:** Faz-se útil quando o usuário navega na rede Onion e não quer testar cada site que encontra um por um, manualmente. O programa faz o teste desses links pra você, e os agrupa permitindo-o saber previamente do que se trata.
+
+Ele pode ainda ser usado para pegar links de arquivos, seja ele o tipo de for, como uma página HTML, ou um texto, um livro, ou qualquer arquivo em texto plano que contenha links. Pode ainda agrupar diferentes listas de links em um único arquivo, removendo duplicatas e removendo também links que não sejam da rede Onion.
+
+Esse programa funciona em qualquer computador que contenha o **Bash v4.0+**, seja ele Linux, MAC ou Windows. Pode ainda ser instalado ou usado diretamente do script.
+
+Ele é parte da categoria de Anonimato existente no Kurupira, para mais informações, procure essa parte na documentação do sistema ou no nosso site.
+<p style="page-break-before: always">
+
+## Help
+
+Abaixo você pode conferir o menu help da ferramenta:
+
+<pre>
 Olá! Seja bem-vindo(a) ao tópico de ajuda do Onion Checker.
-Com esse software você poderá checar se links onion estão  funcionando. Abaixo você pode ver a lista de comandos disponíveis.
-Se algum comando precisar de argumento e não for dado, o mesmo apresentará a mensagem do uso correto.
+Com esse software você poderá checar se links onion estão 
+funcionando. Abaixo você pode ver a lista de comandos dis-
+poníveis.
+Se algum comando precisar de argumento e não for dado, o  
+mesmo apresentará a mensagem do uso correto.
 
->-h ou --help            Mostra essa mensagem de ajuda;
+-h ou --help            Mostra essa mensagem de ajuda;
+-l ou --link-org        Organiza os links de um arquivo;
+-b ou --banner          Exibe o banner e sai;
+-t ou --tor-check       Checa a existência do Tor no computador;
+-c ou --check-link      Checa por links online e manda criar
+arquivo linkson.txt com os títulos e links online, caso
+nenhum nome destino seja dado.
+-j ou --join-lists      Une arquivos contendo links ou outro
+conteúdo;
+--install          Transfere o programa para o diretório /usr/bin
+  permitindo sua execução de forma global;
+--uninstall         Remove completamente o software do computador. 
+</pre>
 
->-l ou --link-org        Organiza os links de um arquivo;
+## Exemplo de uso
 
->-b ou --banner          Exibe o banner e sai;
+Para usar a funcionalidade de teste de links online, necessitamos de um ***arquivo*** contendo os *links a serem testados*. Nesse exemplo utilizarei o arquivo *link.txt*, contendo o link `http://gjobqjj7wyczbqie.onion/`
 
->-t ou --tor-check       Checa a existência do Tor no computador;
+Para usar a ferramenta, basta digitar `onion-checker -c <nomedoarquivo>`. No nosso caso, troquemos *<nomedoarquivo\>* por *link.txt*, resultando em `onion-checker -c links.txt`.
 
->-c ou --check-link      Checa por links online e manda cria arquivo linkson.txt com os títulos e links online, caso nenhum nome destino seja dado .
+Vale lembrar que esse programa tem como dependência os pacotes ` tor torsocks curl coreutils `. Na primeira vez que for usar, ele irá buscar pelo tor rodando, se não estiver, ele o iniciará automaticamente. Iniciado o *tor daemon*, o banner será apresentado, depois é questionado quanto ao timeout que o usuário deseja, e então os links começarão a ser testados. No exemplo ele resulta:
 
->-j ou --join-lists      Une arquivos contendo links ou outro conteúdo;
+<pre>
+Nome destino mantido padrão, escrevendo para arquivo /home/jesus/linkson.txt
 
-> --install              Transfere o script para o `PATH` dos executáveis (`/usr/bin/`);
+Inicializando a checagem dos links...
 
-> --uninstall            Apaga qualquer versão instalada do programa.
+Que timeout você quer para que os links sejam dados como offline?
+Pressione enter para o valor padrão (20s).
+Ex: [10 | 20s | 30m | 1h | 3d] para segundo, minuto, hora e dia. 
+Segundo é a unidade padrão, caso omitida a letra.
 
-### Compatível apenas com bash 3+. Disponível para Linux, MAC e Windows 10.
+Valor padrão para timeout: 20
 
-#### Dependências:
-*tor   torsocks  curl    coreutils*
+Iniciando a checagem dos links...
+
+[1] O link http://gjobqjj7wyczbqie.onion/ está funcionando...
+</pre>
+
+Onde o caminho para o arquivo será sempre sua `$HOME`, caso omitido o arquivo de destino. Vale lembrar que ele cria um arquivo separado par aos arquivos offline.
 
 
-# History 
+**Autor:** Jesus Santos
 
-*21/01/2017 -* Adicionadas as funções de Instalar e Desinstalar o script, que transferem o mesmo para o diretório `/usr/bin`. Adicionado suporte ao bash_autocompletion, possibilitando ao usuário auto-completar suas flags ou arquivos dados como argumentos ao programa. Correção de textos imprimidos ao usuário. Adicionados mais textos para maior entendimento dos processos no decorrer do uso.
+**Colaboradores:** Equipe de desenvolvimento de ferramentas daUnameCorporation
 
-*17/01/2017 -* Corrigida função de união de arquivos que estava sem a funcionalidade de impressão do conteúdo na tela. Trocada a flag que faz a impressão na tela de -t para -st para não haver confusão com a flag [-t| --tor-check].
+**Licensa**: GPLv3
 
-*17/01/2017 -* Adicionada função para união de vários arquivos de texto em um único, ou imprime o resultado na tela. Adicionado suporte à função de organização que aceita qualquer quantidade de arquivos de entrada e manda para um de destino, ou imprime o conteúdo todo na tela. Mudada a forma com que o timeout é setado para o link-check, tendo valor default (ao pressionar enter sem nada) de 20 segundos.
-
-*16/01/2017 -* Função de checagem de links totalmente implementada com timeout escolhido pelo próprio usuário. Teste feito com base em função if-else com regex, bem documentada no source code; Novas implementações nos comandos de limpeza para organização de links, abrangendo gama maior nos arquivos filtrados; Documentação das novas/editadas funções.
-
-*14/01/2017 -* Função de organização de links totalmente implementada e simplificada pro usuário final. Função pra checagem da existência do Tor simplificada e adiciona retorno para exibição ao usuário. Código totalmente comentado à partir de agora.
-
-*13/01/2017 -* Função implementada parcialmente: Filtragem de lista de links onion passada pelo programa. Criação de menu de ajuda e suporte à flags e argumentos de flags. Funções ainda sendo implementadas, link-org é a primeira a estar quase finalizada.
-
-*05/01/2017 -* Começado o trabalho de elaboração do script e estudo de casos para decidir com base em que ferramentas ele trabalhará e a complexidade do mesmo. Decidido até o momento: Será feito em shell.
+**GitHub:** https://github.com/unamecorporation/Onion-Checker
