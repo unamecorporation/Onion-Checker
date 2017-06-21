@@ -1,14 +1,3 @@
-<style media="screen" type="text/css">
-
-p { text-align: justify
-}
-
-pre { color: green 
-}
-
-
-
-</style>
 ## Onion Checker
 
 <pre>
